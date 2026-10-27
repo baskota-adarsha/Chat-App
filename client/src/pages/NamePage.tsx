@@ -2,7 +2,12 @@ import { useState, type FormEvent } from "react";
 
 import { isValidNickName } from "../helpers/validate";
 
-export default function NamePage() {
+interface Props {
+  onEnter: (name: string) => void;
+  error: string | null;
+}
+
+export default function NamePage({ onEnter }: Props) {
   const [name, setName] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
   const onSubmit = (e: FormEvent) => {
@@ -11,6 +16,7 @@ export default function NamePage() {
     if (isValidNickName(cleanName)) {
       console.log(name);
       setLocalError(null);
+      onEnter(cleanName);
     } else {
       setLocalError("Nickname must be 2-15 letters, numbers or _");
     }
