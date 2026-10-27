@@ -15,6 +15,14 @@ export function setupSocket(httpServer: HttpServer) {
       next(new Error("Invalid nickname"));
       return;
     }
+
+    const taken = [...io.sockets.sockets.values()].some(
+      (s) => s.data.userName === username,
+    );
+    if (taken) {
+      next(new Error("Username already used"));
+      return;
+    }
     socket.data.username = username;
     next();
   });
