@@ -39,6 +39,9 @@ export function setupSocket(httpServer: HttpServer) {
       const old = socket.data.room;
       if (old) {
         await socket.leave(old);
+        console.log(`${socket.data.username} left room ${old}`);
+
+        io.to(old).emit("message", `${socket.data.username} left the room`);
       }
     });
   });
