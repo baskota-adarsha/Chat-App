@@ -35,6 +35,11 @@ export function setupSocket(httpServer: HttpServer) {
     socket.on("joinRoom", async (room) => {
       if (!ROOMS.some((r) => r.id === room)) return;
       if (socket.data.room === room) return;
+
+      const old = socket.data.room;
+      if (old) {
+        await socket.leave(old);
+      }
     });
   });
 }
