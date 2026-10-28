@@ -9,6 +9,14 @@ export function setupSocket(httpServer: HttpServer) {
     },
   });
 
+  const sendUsers = async (room: string) => {
+    const sockets = await io.in(room).fetchSockets();
+    io.to(room).emit("roomUsers", {
+      room,
+      users: sockets.map((s) => s.data.username),
+    });
+  };
+
   io.use((socket, next) => {
     const username = String(socket.handshake.auth.username ?? "").trim();
     if (!isValidNickName(username)) {
@@ -42,6 +50,7 @@ export function setupSocket(httpServer: HttpServer) {
         console.log(`${socket.data.username} left room ${old}`);
 
         io.to(old).emit("message", `${socket.data.username} left the room`);
+        await sendUsers(old);
       }
     });
   });
