@@ -59,5 +59,19 @@ export function setupSocket(httpServer: HttpServer) {
       io.to(room).emit("message", `${socket.data.username} joined the room`);
       await sendUsers(room);
     });
+    socket.on("chatMessage", (text) => {
+      const room = socket.data.room;
+
+      const clean = String(text ?? "")
+        .trim()
+        .slice(0, 500);
+
+      if (!room || !clean) return;
+
+      io.to(room).emit("message", {
+        from: socket.data.username,
+        text: clean,
+      });
+    });
   });
 }
