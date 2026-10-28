@@ -55,6 +55,9 @@ export function setupSocket(httpServer: HttpServer) {
       await socket.join(room);
 
       socket.data.room = room;
+
+      io.to(room).emit("message", `${socket.data.username} joined the room`);
+      await sendUsers(room);
     });
   });
 }
