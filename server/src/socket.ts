@@ -2,12 +2,28 @@ import { Server } from "socket.io";
 import type { Server as HttpServer } from "http";
 import { isValidNickName } from "./helpers/validate";
 import { ROOMS } from "./config/rooms";
+import { randomUUID } from "crypto";
 export function setupSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: {
       origin: "http://localhost:5173",
     },
   });
+  const makeMessage = (
+    room: string,
+    from: string,
+    text: string,
+    system = false,
+  ) => {
+    return {
+      id: randomUUID(),
+      room,
+      from,
+      text,
+      time: new Date().toISOString(),
+      system: false,
+    };
+  };
 
   const sendUsers = async (room: string) => {
     const sockets = await io.in(room).fetchSockets();
