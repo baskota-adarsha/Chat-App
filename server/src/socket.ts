@@ -52,6 +52,9 @@ export function setupSocket(httpServer: HttpServer) {
         io.to(old).emit("message", `${socket.data.username} left the room`);
         await sendUsers(old);
       }
+      await socket.join(room);
+
+      socket.data.room = room;
     });
   });
 }
