@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import type { Server as HttpServer } from "http";
 import { isValidNickName } from "./helpers/validate";
-
+import { ROOMS } from "./config/rooms";
 export function setupSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: {
@@ -31,5 +31,10 @@ export function setupSocket(httpServer: HttpServer) {
       `A user connected with username ${socket.data.username}`,
       socket.id,
     );
+
+    socket.on("joinRoom", async (room) => {
+      if (!ROOMS.some((r) => r.id === room)) return;
+      if (socket.data.room === room) return;
+    });
   });
 }
