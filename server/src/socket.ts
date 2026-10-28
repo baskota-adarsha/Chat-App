@@ -84,10 +84,10 @@ export function setupSocket(httpServer: HttpServer) {
 
       if (!room || !clean) return;
 
-      io.to(room).emit("message", {
-        from: socket.data.username,
-        text: clean,
-      });
+      io.to(room).emit(
+        "message",
+        makeMessage(room, socket.data.username, clean),
+      );
     });
   });
 }
