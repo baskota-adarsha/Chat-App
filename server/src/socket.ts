@@ -21,7 +21,7 @@ export function setupSocket(httpServer: HttpServer) {
       from,
       text,
       time: new Date().toISOString(),
-      system: false,
+      system,
     };
   };
 
@@ -65,7 +65,15 @@ export function setupSocket(httpServer: HttpServer) {
         await socket.leave(old);
         console.log(`${socket.data.username} left room ${old}`);
 
-        io.to(old).emit("message", `${socket.data.username} left the room`);
+        io.to(old).emit(
+          "message",
+          makeMessage(
+            old,
+            "system",
+            `${socket.data.username} left the room`,
+            true,
+          ),
+        );
         await sendUsers(old);
       }
       await socket.join(room);
