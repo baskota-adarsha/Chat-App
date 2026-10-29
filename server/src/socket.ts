@@ -80,7 +80,15 @@ export function setupSocket(httpServer: HttpServer) {
 
       socket.data.room = room;
 
-      io.to(room).emit("message", `${socket.data.username} joined the room`);
+      io.to(room).emit(
+        "message",
+        makeMessage(
+          room,
+          "system",
+          `${socket.data.username} joined the room `,
+          true,
+        ),
+      );
       await sendUsers(room);
     });
     socket.on("chatMessage", (text) => {
