@@ -41,7 +41,7 @@ export function setupSocket(httpServer: HttpServer) {
     }
 
     const taken = [...io.sockets.sockets.values()].some(
-      (s) => s.data.userName === username,
+      (s) => s.data.username === username,
     );
     if (taken) {
       next(new Error("Username already used"));
