@@ -105,5 +105,22 @@ export function setupSocket(httpServer: HttpServer) {
         makeMessage(room, socket.data.username, clean),
       );
     });
+
+    socket.on("disconnect", async () => {
+      console.log(`${socket.data.username} disconnected`);
+
+      const room = socket.data.room;
+      if (!room) return;
+      io.to(room).emit(
+        "message",
+        makeMessage(
+          room,
+          "system",
+          `${socket.data.username} went offline`,
+          true,
+        ),
+      );
+      await sendUsers(room);
+    });
   });
 }
