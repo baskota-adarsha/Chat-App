@@ -3,6 +3,7 @@ import type { Server as HttpServer } from "http";
 import { isValidNickName } from "./helpers/validate";
 import { ROOMS } from "./config/rooms";
 import { randomUUID } from "crypto";
+import { ChatMessage } from "./types/chat";
 export function setupSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: {
@@ -14,7 +15,7 @@ export function setupSocket(httpServer: HttpServer) {
     from: string,
     text: string,
     system = false,
-  ) => {
+  ): ChatMessage => {
     return {
       id: randomUUID(),
       room,
