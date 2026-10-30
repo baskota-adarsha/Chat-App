@@ -28,6 +28,12 @@ export function useChat(
       setUsers([]);
       socket.emit("joinRoom", roomRef.current);
     });
+
+    socket.on("connect_error", (err) => {
+      if (!socket.active) {
+        onFatalError(err.message);
+      }
+    });
     return () => {
       socket.disconnect();
     };
