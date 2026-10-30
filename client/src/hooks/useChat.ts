@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import type {
   ChatMessage,
   ClientToServerEvents,
@@ -16,7 +16,7 @@ export function useChat(
   const roomRef = useRef("general");
   const [room, setRoom] = useState("general");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [users, setUsers] = useState<String[]>([]);
+  const [users, setUsers] = useState<string[]>([]);
 
   useEffect(() => {
     const socket: ChatSocket = io(SERVER_URL, {
@@ -39,9 +39,23 @@ export function useChat(
 
       setMessages((prev) => [...prev, msg]);
     });
-
+    socket.on("roomUsers", (data) => {
+      if (data.room !== roomRef.current) return;
+      setUsers(data.users);
+    });
     return () => {
       socket.disconnect();
     };
   }, [username]);
+
+  const joinRoom = useCallback((next: string) => {
+    if (next === roomRef.current) return;
+
+    roomRef.current = next;
+    setRoom(next);
+    setMessages([]);
+    setUsers([]);
+
+    socketRef.current?.emit("joinRoom", next);
+  }, []);
 }
