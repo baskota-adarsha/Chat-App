@@ -34,6 +34,12 @@ export function useChat(
         onFatalError(err.message);
       }
     });
+    socket.on("message", (msg) => {
+      if (msg.room !== roomRef.current) return;
+
+      setMessages((prev) => [...prev, msg]);
+    });
+
     return () => {
       socket.disconnect();
     };
