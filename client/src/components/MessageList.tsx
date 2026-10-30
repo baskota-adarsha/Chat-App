@@ -4,12 +4,21 @@ interface Props {
   messages: ChatMessage[];
   username: string;
 }
+
 export default function MessageList({ messages, username }: Props) {
   return (
     <ul className="messages">
-      {messages.map((msg) => (
-        <li key={msg.id}>{msg.text}</li>
-      ))}
+      {messages.map((msg) =>
+        msg.system ? (
+          <li key={msg.id} className="system">
+            {msg.text}
+          </li>
+        ) : (
+          <li key={msg.id} className="bubble">
+            {msg.text}
+          </li>
+        ),
+      )}
     </ul>
   );
 }
