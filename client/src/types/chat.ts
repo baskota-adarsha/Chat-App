@@ -9,7 +9,7 @@ export interface ChatMessage {
 
 export interface ServerToClientEvents {
   message: (msg: ChatMessage) => void;
-  roomUsers: (data: { room: string; user: string[] }) => void;
+  roomUsers: (data: { room: string; users: string[] }) => void;
 }
 
 export interface ClientToServerEvents {
