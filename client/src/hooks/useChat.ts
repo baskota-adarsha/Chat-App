@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   ChatMessage,
   ClientToServerEvents,
   ServerToClientEvents,
 } from "../types/chat";
-import { type Socket } from "socket.io-client";
+import { io, type Socket } from "socket.io-client";
 
 type ChatSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
 const SERVER_URL = "http://localhost:3005";
@@ -17,4 +17,15 @@ export function useChat(
   const [room, setRoom] = useState("general");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [users, setUsers] = useState<String[]>([]);
+
+  useEffect(() => {
+    const socket: ChatSocket = io(SERVER_URL, {
+      auth: { username },
+    });
+    socketRef.current = socket;
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [username]);
 }
