@@ -23,7 +23,11 @@ export function useChat(
       auth: { username },
     });
     socketRef.current = socket;
-
+    socket.on("connect", () => {
+      setMessages([]);
+      setUsers([]);
+      socket.emit("joinRoom", roomRef.current);
+    });
     return () => {
       socket.disconnect();
     };
