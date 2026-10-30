@@ -58,4 +58,8 @@ export function useChat(
 
     socketRef.current?.emit("joinRoom", next);
   }, []);
+
+  const sendMessage = useCallback((text: String) => {
+    socketRef.current?.emit("chatMessage", text);
+  }, []);
 }
