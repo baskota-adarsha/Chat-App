@@ -14,7 +14,12 @@ export default function MessageInput({ onSend }: Props) {
 
   return (
     <form className="composer" onSubmit={submit}>
-      <input type="text" placeholder="Say something nice" />
+      <input
+        type="text"
+        placeholder="Say something nice"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
       <button type="submit">Send</button>
     </form>
   );
