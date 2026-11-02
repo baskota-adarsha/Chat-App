@@ -1,11 +1,17 @@
 import type { ChatMessage } from "../types/chat";
-
+import { useEffect, useRef } from "react";
 interface Props {
   messages: ChatMessage[];
   username: string;
 }
 
 export default function MessageList({ messages, username }: Props) {
+  const bottomRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <ul className="messages">
       {messages.map((msg) =>
@@ -29,6 +35,8 @@ export default function MessageList({ messages, username }: Props) {
           </li>
         ),
       )}
+
+      <li ref={bottomRef} />
     </ul>
   );
 }
