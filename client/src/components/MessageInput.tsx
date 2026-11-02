@@ -8,5 +8,6 @@ export default function MessageInput({ onSend }: Props) {
     e.preventDefault();
     const clean = text.trim();
     if (!clean) return;
+    onSend(clean);
   }
 }
