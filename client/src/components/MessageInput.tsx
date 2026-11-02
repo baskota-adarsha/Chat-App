@@ -11,4 +11,11 @@ export default function MessageInput({ onSend }: Props) {
     onSend(clean);
     setText("");
   }
+
+  return (
+    <form className="composer" onSubmit={submit}>
+      <input type="text" placeholder="Say something nice" />
+      <button type="submit">Send</button>
+    </form>
+  );
 }
