@@ -41,6 +41,7 @@ export default function ChatPage({ username, onLeave }: Props) {
       </aside>
 
       <MessageList messages={messages} username={username} />
+      <MessageInput onSend={sendMessage} />
     </main>
   );
 }
