@@ -8,6 +8,8 @@ interface Props {
   onLeave: () => void;
 }
 
+const ROOMS = ["general", "music", "coding"];
+
 export default function ChatPage({ username, onLeave }: Props) {
   const [fatalError, setFatalError] = useState<string | null>(null);
 
@@ -31,6 +33,17 @@ export default function ChatPage({ username, onLeave }: Props) {
         <h2>{room}</h2>
         <button onClick={onLeave}>Leave</button>
       </header>
+      <nav className="room-selector">
+        {ROOMS.map((roomname) => (
+          <button
+            key={roomname}
+            onClick={() => joinRoom(roomname)}
+            className={room === roomname ? "active" : ""}
+          >
+            {roomname}
+          </button>
+        ))}
+      </nav>
       <aside className="users">
         <h3>Online Users({users.length})</h3>
         <ul>
