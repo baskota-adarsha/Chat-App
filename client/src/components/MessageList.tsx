@@ -18,7 +18,8 @@ export default function MessageList({ messages, username }: Props) {
             key={msg.id}
             className={msg.from === username ? "bubble mine" : "bubble"}
           >
-            {msg.text}
+            <span className="name">{msg.from}</span>
+            <p> {msg.text}</p>
           </li>
         ),
       )}
