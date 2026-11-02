@@ -15,4 +15,22 @@ export default function ChatPage({ username, onLeave }: Props) {
     username,
     (message) => setFatalError(message),
   );
+
+  if (fatalError) {
+    return (
+      <div className="fatal">
+        <p>{fatalError}</p>
+        <button onClick={onLeave}>Back</button>
+      </div>
+    );
+  }
+
+  return (
+    <main className="chat">
+      <header className="chat-header">
+        <h2>{room}</h2>
+        <button onClick={onLeave}>Leave</button>
+      </header>
+    </main>
+  );
 }
