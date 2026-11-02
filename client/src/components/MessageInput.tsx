@@ -9,5 +9,6 @@ export default function MessageInput({ onSend }: Props) {
     const clean = text.trim();
     if (!clean) return;
     onSend(clean);
+    setText("");
   }
 }
