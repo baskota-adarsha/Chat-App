@@ -8,4 +8,11 @@ interface Props {
   onLeave: () => void;
 }
 
-export default function ChatPage({ username, onLeave }: Props);
+export default function ChatPage({ username, onLeave }: Props) {
+  const [fatalError, setFatalError] = useState<string | null>(null);
+
+  const { room, messages, users, joinRoom, sendMessage } = useChat(
+    username,
+    (message) => setFatalError(message),
+  );
+}
