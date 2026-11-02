@@ -19,6 +19,8 @@ export default function MessageInput({ onSend }: Props) {
         placeholder="Say something nice"
         value={text}
         onChange={(e) => setText(e.target.value)}
+        maxLength={500}
+        autoComplete="off"
       />
       <button type="submit">Send</button>
     </form>
