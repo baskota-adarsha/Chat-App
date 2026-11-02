@@ -31,6 +31,16 @@ export default function ChatPage({ username, onLeave }: Props) {
         <h2>{room}</h2>
         <button onClick={onLeave}>Leave</button>
       </header>
+      <aside className="users">
+        <h3>Online Users({users.length})</h3>
+        <ul>
+          {users.map((user) => (
+            <li key={user}>{user}</li>
+          ))}
+        </ul>
+      </aside>
+
+      <MessageList messages={messages} username={username} />
     </main>
   );
 }
