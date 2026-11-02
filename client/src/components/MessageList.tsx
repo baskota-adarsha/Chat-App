@@ -20,6 +20,12 @@ export default function MessageList({ messages, username }: Props) {
           >
             <span className="name">{msg.from}</span>
             <p> {msg.text}</p>
+            <small>
+              {new Date(msg.time).toLocaleDateString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </small>
           </li>
         ),
       )}
