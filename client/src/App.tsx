@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import NamePage from "./pages/NamePage";
+import ChatPage from "./pages/ChatPage";
 
-function App() {
-  const [username, setUserName] = useState<null | string>(null);
+export default function App() {
+  const [username, setUsername] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!username) {
-    return <NamePage onEnter={setUserName} error={null} />;
-  }
-  return <p style={{ padding: "2rem" }}>Welcome {username}!</p>;
+  const enter = (name: string) => {
+    setError(null);
+    setUsername(name);
+  };
+
+  const handleFatalError = useCallback((message: string) => {
+    setError(message);
+    setUsername(null);
+  }, []);
+
+  if (!username) return <NamePage onEnter={enter} error={error} />;
+
+  return <ChatPage username={username} onFatalError={handleFatalError} />;
 }
-
-export default App;
