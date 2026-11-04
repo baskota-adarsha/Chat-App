@@ -18,7 +18,9 @@ export default function NamePage({ onEnter }: Props) {
       setLocalError(null);
       onEnter(cleanName);
     } else {
-      setLocalError("Nickname must be 2-15 letters, numbers or _");
+      setLocalError(
+        "Nickname must be 2-15 letters, numbers and should not contain spaces",
+      );
     }
   };
   return (
