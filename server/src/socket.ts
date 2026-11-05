@@ -3,7 +3,7 @@ import type { Server as HttpServer } from "http";
 import { isValidNickName } from "./helpers/validate";
 import { ROOMS } from "./config/rooms";
 import { randomUUID } from "crypto";
-import { ChatMessage } from "./types/chat";
+import { ChatMessage, RoomUser } from "./types/chat";
 export function setupSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: {
@@ -13,6 +13,7 @@ export function setupSocket(httpServer: HttpServer) {
   const makeMessage = (
     room: string,
     from: string,
+    fromId: string,
     text: string,
     system = false,
   ): ChatMessage => {
@@ -20,35 +21,43 @@ export function setupSocket(httpServer: HttpServer) {
       id: randomUUID(),
       room,
       from,
+      fromId,
       text,
       time: new Date().toISOString(),
       system,
     };
   };
 
+  const systemMessage = (room: string, text: string): ChatMessage => {
+    return makeMessage(room, "system", "system", text, true);
+  };
+
   const sendUsers = async (room: string) => {
     const sockets = await io.in(room).fetchSockets();
+    const unique = new Map<string, RoomUser>();
+    for (const s of sockets) {
+      unique.set(s.data.userId, { id: s.data.userId, name: s.data.username });
+    }
     io.to(room).emit("roomUsers", {
       room,
-      users: sockets.map((s) => s.data.username),
+      users: [...unique.values()],
     });
   };
 
   io.use((socket, next) => {
     const username = String(socket.handshake.auth.username ?? "").trim();
+    const userId = String(socket.handshake.auth.userId ?? "").trim();
     if (!isValidNickName(username)) {
       next(new Error("Invalid nickname"));
       return;
     }
-
-    const taken = [...io.sockets.sockets.values()].some(
-      (s) => s.data.username === username,
-    );
-    if (taken) {
-      next(new Error("Username already used"));
+    if (userId.length < 8 || userId.length > 64) {
+      next(new Error("Invalid user id"));
       return;
     }
+
     socket.data.username = username;
+    socket.data.userId = userId;
     next();
   });
   io.on("connection", (socket) => {
@@ -64,16 +73,10 @@ export function setupSocket(httpServer: HttpServer) {
       const old = socket.data.room;
       if (old) {
         await socket.leave(old);
-        console.log(`${socket.data.username} left room ${old}`);
 
         io.to(old).emit(
           "message",
-          makeMessage(
-            old,
-            "system",
-            `${socket.data.username} left the room`,
-            true,
-          ),
+          systemMessage(old, `${socket.data.username} left the room`),
         );
         await sendUsers(old);
       }
@@ -83,12 +86,7 @@ export function setupSocket(httpServer: HttpServer) {
 
       io.to(room).emit(
         "message",
-        makeMessage(
-          room,
-          "system",
-          `${socket.data.username} joined the room `,
-          true,
-        ),
+        systemMessage(room, `${socket.data.username} joined the room`),
       );
       await sendUsers(room);
     });
@@ -100,11 +98,13 @@ export function setupSocket(httpServer: HttpServer) {
         .slice(0, 500);
 
       if (!room || !clean) return;
-
-      io.to(room).emit(
-        "message",
-        makeMessage(room, socket.data.username, clean),
+      const msg = makeMessage(
+        room,
+        socket.data.username,
+        socket.data.userId,
+        clean,
       );
+      io.to(room).emit("message", msg);
     });
 
     socket.on("disconnect", async () => {
@@ -114,12 +114,7 @@ export function setupSocket(httpServer: HttpServer) {
       if (!room) return;
       io.to(room).emit(
         "message",
-        makeMessage(
-          room,
-          "system",
-          `${socket.data.username} went offline`,
-          true,
-        ),
+        systemMessage(room, `${socket.data.username} went offline`),
       );
       await sendUsers(room);
     });
