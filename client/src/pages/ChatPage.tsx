@@ -9,16 +9,15 @@ interface Props {
 }
 
 export default function ChatPage({ username, onFatalError }: Props) {
-  const { room, messages, sendMessage, users, joinRoom } = useChat(
-    username,
-    onFatalError,
-  );
+  const { myId, room, messages, sendMessage, users, joinRoom, notice } =
+    useChat(username, onFatalError);
 
   const title = ROOMS.find((r) => r.id === room)?.label ?? room;
   return (
     <div className="app">
       <Sidebar
         username={username}
+        myId={myId}
         currentRoom={room}
         users={users}
         onJoin={joinRoom}
@@ -27,7 +26,8 @@ export default function ChatPage({ username, onFatalError }: Props) {
         <header>
           <h2>{title}</h2>
         </header>
-        <MessageList messages={messages} username={username} />
+        <MessageList messages={messages} myId={myId} />
+        {notice && <p className="notice">{notice}</p>}
         <MessageInput onSend={sendMessage} />
       </main>
     </div>
