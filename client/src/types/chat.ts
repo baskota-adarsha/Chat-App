@@ -2,6 +2,7 @@ export interface ChatMessage {
   id: string;
   room: string;
   from: string;
+  fromId: string;
   text: string;
   time: string;
   system?: boolean;
