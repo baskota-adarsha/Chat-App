@@ -2,10 +2,10 @@ import type { ChatMessage } from "../types/chat";
 import { useEffect, useRef } from "react";
 interface Props {
   messages: ChatMessage[];
-  username: string;
+  myId: string;
 }
 
-export default function MessageList({ messages, username }: Props) {
+export default function MessageList({ messages, myId }: Props) {
   const bottomRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function MessageList({ messages, username }: Props) {
         ) : (
           <li
             key={msg.id}
-            className={msg.from === username ? "bubble mine" : "bubble"}
+            className={msg.fromId === myId ? "bubble mine" : "bubble"}
           >
             <span className="name">{msg.from}</span>
             <p> {msg.text}</p>
