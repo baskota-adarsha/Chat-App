@@ -16,3 +16,7 @@ export interface ClientToServerEvents {
   joinRoom: (room: string) => void;
   chatMessage: (text: string) => void;
 }
+export interface RoomUser {
+  id: string;
+  name: string;
+}
