@@ -7,6 +7,7 @@ app.use(cors({ origin: "http://localhost:5173" }));
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
+
 const httpServer = createServer(app);
 
 setupSocket(httpServer);
