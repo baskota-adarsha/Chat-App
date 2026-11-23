@@ -7,14 +7,14 @@ interface Props {
   error: string | null;
 }
 
-export default function NamePage({ onEnter }: Props) {
+export default function NamePage({ onEnter, error }: Props) {
   const [name, setName] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const cleanName = name.trim();
     if (isValidNickName(cleanName)) {
-      console.log(name);
       setLocalError(null);
       onEnter(cleanName);
     } else {
@@ -23,12 +23,16 @@ export default function NamePage({ onEnter }: Props) {
       );
     }
   };
+
+  // pahile aafno error, natra server le pathayeko error
+  const shownError = localError ?? error;
+
   return (
     <div className="center">
       <div className="card">
         <h1> Chat App</h1>
         <p className="sub">Pick a nickname and hop into a room</p>
-        {localError && <p className="error">{localError}</p>}
+        {shownError && <p className="error">{shownError}</p>}
         <form onSubmit={onSubmit}>
           <input
             type="text"

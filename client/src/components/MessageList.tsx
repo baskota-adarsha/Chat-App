@@ -1,5 +1,6 @@
 import type { ChatMessage } from "../types/chat";
 import { useEffect, useRef } from "react";
+
 interface Props {
   messages: ChatMessage[];
   myId: string;
@@ -27,7 +28,7 @@ export default function MessageList({ messages, myId }: Props) {
             <span className="name">{msg.from}</span>
             <p> {msg.text}</p>
             <small>
-              {new Date(msg.time).toLocaleDateString([], {
+              {new Date(msg.time).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}

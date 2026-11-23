@@ -26,7 +26,7 @@ export interface ClientToServerEvents {
 }
 
 export interface SocketData {
-  username: string;
+  userName: string;
   userId: string;
   room?: string;
 }

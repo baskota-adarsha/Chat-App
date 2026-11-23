@@ -8,7 +8,7 @@ import type {
   ServerToClientEvents,
 } from "../types/chat";
 
-const SERVER_URL = "http://localhost:3001";
+const SERVER_URL = "http://localhost:3005";
 
 type ChatSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -26,8 +26,9 @@ export function useChat(
   const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
+    // server le "userName" khojchha, tei vayera yehi naam ma pathaune
     const socket: ChatSocket = io(SERVER_URL, {
-      auth: { username, userId: myId },
+      auth: { userName: username, userId: myId },
     });
     socketRef.current = socket;
 

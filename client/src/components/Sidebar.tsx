@@ -1,5 +1,6 @@
 import { ROOMS } from "../helpers/rooms";
 import type { RoomUser } from "../types/chat";
+
 interface Props {
   username: string;
   myId: string;
@@ -7,6 +8,7 @@ interface Props {
   users: RoomUser[];
   onJoin: (roomId: string) => void;
 }
+
 export default function Sidebar({
   username,
   myId,
@@ -38,7 +40,7 @@ export default function Sidebar({
 
       <h3>Online here</h3>
       <ul className="users">
-        {users.map((u: any) => (
+        {users.map((u) => (
           <li key={u.id}>{u.id === myId ? `${u.name} (you)` : u.name}</li>
         ))}
       </ul>
