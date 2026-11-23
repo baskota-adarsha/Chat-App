@@ -1,0 +1,15 @@
+{
+  "name": "chatapp",
+  "private": true,
+  "scripts": {
+    "lint": "eslint server/src client/src",
+    "format": "prettier --write server/src client/src",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "{server,client}/src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
